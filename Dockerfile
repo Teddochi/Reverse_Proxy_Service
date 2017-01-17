@@ -1,14 +1,16 @@
-FROM ubuntu
+FROM ubuntu:latest
 
 MAINTAINER Ted Ochiai
 
-RUN apt-get update
+# Install required tools
+RUN apt-get update && apt-get install -y \
+git \
+python \
+python-distribute \
+python-pip
 
-RUN apt-get install -y git
-
-# Python specific tools}
-RUN apt-get install -y python python-dev python-distribute python-pip
-
-# Install requirements
+# Update pip
 RUN pip install --upgrade pip
+
+# Install Twisted Matrix
 RUN pip install Twisted
