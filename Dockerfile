@@ -14,3 +14,4 @@ RUN pip install --upgrade pip
 
 # Install Twisted Matrix
 RUN pip install Twisted
+RUN pip install nose
