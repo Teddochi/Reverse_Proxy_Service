@@ -5,7 +5,7 @@ import BaseHTTPServer
 import SocketServer
 import urllib
 import re
-
+import tools
 
 class HTTPServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
     pass
@@ -13,7 +13,8 @@ class HTTPServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
 class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
     	print self.path
-        dataobj = urllib.urlopen("http://webservices.nextbus.com/service/publicXMLFeed?command=agencyList")
+    	output = tools.handlePath(self.path)
+        dataobj = urllib.urlopen(output)
         data = dataobj.read()
         self.send_response(200)
         self.send_header("Content-Length", len(data))
