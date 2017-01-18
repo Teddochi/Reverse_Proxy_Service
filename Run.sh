@@ -1,2 +1,2 @@
 #!/bin/sh
-python app/hello.py
+python app/reverse_proxy.py
