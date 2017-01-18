@@ -12,13 +12,14 @@ class HTTPServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
 
 class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
-    	print self.path
-    	output = tools.handlePath(self.path)
-        dataobj = urllib.urlopen(output)
-        data = dataobj.read()
-        self.send_response(200)
+    	resource_url = tools.handlePath(self.path[1:])
+        response = urllib.urlopen(resource_url)
+        data = response.read()
+        
+        self.send_response(response.code)
         self.send_header("Content-Length", len(data))
-        for key, value in dataobj.info().items():
+        
+        for key, value in response.info().items():
             self.send_header(key, value)
         self.end_headers()
         self.wfile.write(data)

@@ -1,13 +1,12 @@
+import constants
 
-nextbus_path =  'http://webservices.nextbus.com/service/publicXMLFeed?command='
-not_found = "https://designmodo.com/wp-content/uploads/2013/03/Saaspose.jpg"
 # Route the user to the proper nextbus api endpoint according to path
 def handlePath(path):
-	if path == '/stats':
-		return not_found
-	elif path == '/':
-		return not_found
+	if path == constants.stats_path:
+		return constants.not_found
+	elif path:
+		# A command was entered. 
+		return constants.nextbus_path + constants.command_parameter + path
 	else:
-		return nextbus_path + path
-	
-
+		# Direct user to publicXMLFeed of nextbus
+		return constants.nextbus_path

@@ -1,2 +1,2 @@
 #!/bin/sh
-nosetests --nologcapture
+python testing/test_driver.py

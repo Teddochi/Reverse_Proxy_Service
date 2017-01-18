@@ -1,8 +1,8 @@
-from .context import app
+from context import app
 import unittest
 
-from .tests import file_requirements, reverse_proxy_service, statistics
-from .tests import bonus_1, bonus_2, bonus_3
+from tests import file_requirements, reverse_proxy_service, statistics
+from tests import bonus_1, bonus_2, bonus_3
 
 # This class runs tests for each general requirement.  
 # Each test is defined by several unit tests
@@ -33,3 +33,7 @@ class TestDriver(unittest.TestCase):
     def test_bonus_3(self):
         bonus_3.test(self)
 """
+
+
+if __name__ == '__main__':
+    unittest.main()

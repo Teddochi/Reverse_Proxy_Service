@@ -1,14 +1,14 @@
 import requests
-from ..context import proxy_url
+from app import constants
 
 def test(self):
-	r = requests.get(proxy_url + "stats")
+	r = requests.get(constants.proxy_url + "/" + constants.stats_path)
 	test_stats_200(self, r)
 
 	test_slow_requests(self)
 
 def test_stats_200(self, response):
-    self.assertEquals(r.status_code, 200)
+    self.assertEquals(response.status_code, 200)
 
 def test_slow_requests(self):
 	self.assertTrue(False)
