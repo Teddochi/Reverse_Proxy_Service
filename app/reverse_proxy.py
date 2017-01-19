@@ -16,34 +16,31 @@ class HTTPServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
 
 class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
+        # Get data filename from client ip(127.0.0.1 => 127-0-0-1.json)
+        file_name = self.client_address[0].replace(".", "-") + ".json"
+        
+        # Create path to data file
+        path_to_data = path.join(curdir, 'app/database/' + file_name)
+        
+        # Check if file exists
+        if not path.exists('app/database/' + file_name):
+            # Create new file
+            with open(path_to_data, 'w') as data_file:
+                json.dump(constants.clean_data_file, data_file)
+    
+
+
         if self.path == constants.stats_path:
-            # get filename from client ip
-            file_name = self.client_address[0].replace(".", "-") + ".json"
-
-            # Create path to file
-            data_path = path.join(curdir, 'app/database/' + file_name)
-
+            # Stats page requested
             self.send_response(200)
             self.send_header('Content-type', 'text/json')
             self.end_headers()
-            try:
-                # Try to open file
-                with open(data_path) as fh:
-                    self.wfile.write(fh.read().encode())
-            except(IOError):
-                # File did not exist
-                # Use empty placeholder stats page for this first request
-                self.wfile.write(constants.clean_data_file_str.encode())
 
-                # Create new file
-                with open(data_path, 'w') as fh:
-                    json.dump(constants.clean_data_file, fh)
-
+            # Write stats file to page
+            with open(path_to_data) as data_file:
+                self.wfile.write(data_file.read().encode())
+# TODO: Pretty print
         else:
-
-
-# TODO: Update stats according to requests
-
             resource_url = tools.getNextBusUrl(self.path)
             response = urllib.urlopen(resource_url)
             data = response.read()
@@ -55,9 +52,13 @@ class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 self.send_header(key, value)
             self.end_headers()
             self.wfile.write(data)
-
+            
+            # Update stats according to request
 
         
+# Check if database folder exists, and create one if not
 if not path.exists('app/database/'):
     makedirs('app/database/')
+
+# Start server
 HTTPServer(("", constants.port), ProxyHandler).serve_forever()
