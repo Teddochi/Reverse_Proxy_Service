@@ -2,7 +2,7 @@ import requests
 from app import constants
 
 def test(self):
-	r = requests.get(constants.proxy_url + constants.stats_path)
+	r = requests.get(constants.PROXY_URL + constants.STATS_PATH)
 	test_stats_200(self, r)
 	test_slow_requests(self)
 	test_queries(self)

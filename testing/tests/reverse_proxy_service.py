@@ -14,7 +14,7 @@ def test(self):
 
 # Helper function to test that a command receives a status code of 200
 def receives_200(command):
-    r = requests.get(constants.proxy_url + "/" + command)
+    r = requests.get(constants.PROXY_URL + "/" + command)
     return r.status_code == 200
     
 # Confirm that the reverse proxy is running
