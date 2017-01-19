@@ -1,4 +1,0 @@
-maproxy
-nose
-requests
-tornado

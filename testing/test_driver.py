@@ -34,6 +34,6 @@ class TestDriver(unittest.TestCase):
         bonus_3.test(self)
 """
 
-
+# TODO: Use a temporary database file for testing
 if __name__ == '__main__':
     unittest.main()
