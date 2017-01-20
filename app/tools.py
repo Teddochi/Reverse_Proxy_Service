@@ -1,6 +1,7 @@
 import constants
 import urllib
 import time
+import copy
 import json
 from os import curdir, path, makedirs, remove
 
@@ -78,19 +79,37 @@ def handle_stats_request(request):
     with open(stats_path) as stats_file:
         request.wfile.write(stats_file.read().encode())
 
-# Pass the user's request to the NextBus API and load the results to the page
-def handle_proxy_request(request, start_time):
-    # Get the requested resource from NextBus
-    resource_url = get_NEXTBUS_URL(request.path)
-    response = urllib.urlopen(resource_url)
-    data = response.read()
+# Get an http response either from the cache or from the nextbus API
+def get_response(request, cache):
+    if request.path in cache:
+        # Return cached request. Reassign it to refresh timer
+        cache[request.path] = cache.get(request.path)
+        return cache[request.path]
+    else:
+        # Request not cached.  Get the requested resource from NextBus
+        resource_url = get_NEXTBUS_URL(request.path)
+        response = urllib.urlopen(resource_url)
+
+        # We store a tuple because caching the response itself 
+        #   does not store the data needed for response.read()
+        info = {'data': response.read(), \
+                'code': response.code, \
+                'headers': response.info().items()}
+        cache[request.path] = info
+        return info
+
+# Get the requested resource and load it to the page
+def handle_proxy_request(request, start_time, cache):
+    # Get the requested resource
+    response = get_response(request, cache)
+
+    data = response['data']
 
     # Use headers obtained from the our request to NextBus
-    request.send_response(response.code)
-    request.send_header("Content-Length", len(data))
+    request.send_response(response['code'])
 
     # Load the data to the page
-    for key, value in response.info().items():
+    for key, value in response['headers']:
         request.send_header(key, value)
     request.end_headers()
     request.wfile.write(data)
@@ -98,6 +117,7 @@ def handle_proxy_request(request, start_time):
     # Record the amount of time taken to complete the request
     end = time.time()
     request_time = end - start_time    
+    print request_time
 
     # Update statistics file according to request
     update_statistics(request, request_time)

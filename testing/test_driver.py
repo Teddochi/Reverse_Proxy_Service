@@ -53,7 +53,6 @@ class TestDriver(unittest.TestCase):
             self.assertTrue(slow == [str(slow_time) + constants.TIME_UNIT]) 
 
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-        
 # End tests for application tools ---------------------------------------------
 
 # Tests for challenge requirements --------------------------------------------
@@ -118,7 +117,6 @@ class TestDriver(unittest.TestCase):
         self.assertTrue('slow_requests' in stats_page)
         self.assertTrue('queries' in stats_page)
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-
 # End tests for challenge requirements ----------------------------------------
 
 """ Commented until later
