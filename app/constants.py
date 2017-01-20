@@ -19,7 +19,7 @@ ROOT_PATH = "/"
 
 # Important URLs
 NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
-PROXY_URL = 'http://192.168.99.100:' + str(PORT)
+PROXY_URL = 'http://localhost:' + str(PORT)
 TEST_URL = PROXY_URL + "/test"
 TEST_CLEAN_UP_URL = PROXY_URL + TEST_CLEAN_UP_PATH
 
