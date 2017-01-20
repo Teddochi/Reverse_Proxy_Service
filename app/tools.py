@@ -2,7 +2,7 @@ import constants
 import urllib
 import time
 import json
-from os import curdir, path, makedirs
+from os import curdir, path, makedirs, remove
 
 # Database tools --------------------------------------------------------------
 # Create a database folder if it is not already there
@@ -10,39 +10,28 @@ def create_database():
     if not path.exists(constants.DATABASE_PATH):
         makedirs(constants.DATABASE_PATH)
 
-# Create a path to the statistics file
-def get_stats_path(request):
+# Creates a statistics file if needed
+def create_stats_file(request):
     # Create a statistics file name from the client's IP address
-    file_name = get_ip_file_name(request.client_address[0])
+    file_name = request.client_address[0].replace(".", "-") + ".json"
 
     # Generate a path to the stats file
     stats_path = path.join(curdir, constants.DATABASE_PATH + file_name)
-    
-    # Create the file if it is not already there
-    create_stats_file(file_name, stats_path)
 
-    # Return the path
-    return stats_path
-
-# Create a file name from the given IP address. (127.0.0.1 => 127-0-0-1.json)
-def get_ip_file_name(address):
-    return address.replace(".", "-") + ".json"
-
-# Creates a statistics file if needed
-def create_stats_file(file_name, stats_path):
+    # Check if file exists at the path, create it if not
     if not path.exists(constants.DATABASE_PATH + file_name):
         # Create a clean file
         with open(stats_path, 'w') as stats_file:
             json.dump(constants.CLEAN_STATS_FILE, stats_file, indent=4)
-
+    return stats_path
 # Update the statistics file using information from a request 
 def update_statistics(request, request_time):
     # Ignore favicon requests from the browser
     if request.path == constants.FAVICON_PATH:
         return
 
-    # Get a path to the statistics file. 
-    stats_path = get_stats_path(request)
+    # Create the statistics file if it is not already there
+    stats_path = create_stats_file(request)
 
     request_path = request.path
     updated_stats = {}
@@ -68,6 +57,14 @@ def update_statistics(request, request_time):
 # End Database Tools ----------------------------------------------------------
 
 # Handler Tools ---------------------------------------------------------------
+# Get a URL for the NextBus API based on the user's requested path
+def get_NEXTBUS_URL(path):
+    if path == constants.ROOT_PATH:
+        return constants.NEXTBUS_URL 
+    else:
+        # Send a command to the nextbus api
+        return constants.NEXTBUS_URL + constants.COMMAND_PARAMETER + path[1:]
+
 # Handle a request for the statistics page
 def handle_stats_request(request):
     request.send_response(200)
@@ -75,7 +72,7 @@ def handle_stats_request(request):
     request.end_headers()
     
     # Get a path to the statistics file
-    stats_path = get_stats_path(request)
+    stats_path = create_stats_file(request)
 
     # Load stats file to the page
     with open(stats_path) as stats_file:
@@ -104,12 +101,45 @@ def handle_proxy_request(request, start_time):
 
     # Update statistics file according to request
     update_statistics(request, request_time)
-
-# Get a URL for the NextBus API based on the user's requested path
-def get_NEXTBUS_URL(path):
-    if path == constants.ROOT_PATH:
-        return constants.NEXTBUS_URL 
-    else:
-        # Send a command to the nextbus api
-        return constants.NEXTBUS_URL + constants.COMMAND_PARAMETER + path[1:]
 # End Handler Tools -----------------------------------------------------------
+
+# Testing Tools ---------------------------------------------------------------
+# Modifies a request for testing use
+def handle_test_request(request):
+    # Modifies the testing path to a standard reverse proxy path
+    request.path = request.path[len(constants.TEST_PATH):]
+
+    # Modifies the ip to create a testing-specific IP address for the request
+    request.client_address = ("test-" + request.client_address[0], \
+                              request.client_address[1])
+    
+    return request
+
+# Delete any test files from this client
+def handle_test_clean_up(request):
+    # Generate the testing file name for this client
+    file_name = 'test' + request.client_address[0].replace(".", "-") + ".json"
+
+    testing_path = path.join(curdir, constants.DATABASE_PATH + \
+                             constants.TEST_STATS_FILE)
+    # Remove the tool testing file
+    if path.exists(testing_path):
+        remove(testing_path)
+
+# Delete test files from the testing ip
+def handle_ip_clean_up(request):
+    # Generate the testing file name for this client
+    file_name = 'test-' + request.client_address[0].replace(".", "-") + ".json"
+
+    # Generate a path to the testing file
+    testing_path = path.join(curdir, constants.DATABASE_PATH + file_name)
+    
+    # Remove the testing file
+    if path.exists(testing_path):
+        remove(testing_path)
+
+    request.send_response(200)
+    request.send_header('Content-type', 'text')
+    request.end_headers()    
+    request.wfile.write("Removed test file: " + file_name)
+# End Testing Tools -----------------------------------------------------------

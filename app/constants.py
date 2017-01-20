@@ -10,17 +10,21 @@ PORT = 8888
 # Threshold for slow response time 
 SLOW_REQUEST_THRESHOLD = .5
 
-# Important URLs
-NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
-PROXY_URL = 'http://localhost:' + str(PORT)
-
-# Used with NextBus API.  
-COMMAND_PARAMETER = '?command='
-
 STATS_PATH = '/stats'
+TEST_PATH = '/test'
+TEST_CLEAN_UP_PATH = '/test_clean_up'
 FAVICON_PATH = '/favicon.ico'
 DATABASE_PATH = 'app/database/'
 ROOT_PATH = "/"
+
+# Important URLs
+NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
+PROXY_URL = 'http://localhost:' + str(PORT)
+TEST_URL = PROXY_URL + "/test"
+TEST_CLEAN_UP_URL = PROXY_URL + TEST_CLEAN_UP_PATH
+
+# Used with NextBus API.  
+COMMAND_PARAMETER = '?command='
 
 # Used for the statistics page
 QUERIES_KEY = 'queries'
@@ -31,3 +35,11 @@ SERVER_START_MESSAGE = "Starting server on port: " + str(PORT)
 
 # Seconds, used for slow requests
 TIME_UNIT = 's'
+
+# Testing variables
+TEST_ADDRESS = 'tool.test.request.ip'
+TEST_STATS_FILE = 'tool-test-request-ip.json'
+
+class FAKE_REQUEST(object):
+    client_address = (TEST_ADDRESS, '00000')
+    path = '/fake_test_path'

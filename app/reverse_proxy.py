@@ -19,8 +19,15 @@ class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if request.path == constants.STATS_PATH:
             # Statistics request
             tools.handle_stats_request(request)
+        elif request.path == constants.TEST_CLEAN_UP_PATH:
+            # Handle a test clean-up
+            tools.handle_ip_clean_up(request)
+        elif request.path.startswith(constants.TEST_PATH):
+            # Handles a test request
+            test_request = tools.handle_test_request(request)
+            ProxyHandler.do_GET(test_request)
         else:
-            # Proxy request
+            # Standard reverse proxy request
             tools.handle_proxy_request(request, start_time)
             
 # Set up the database folder
