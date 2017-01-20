@@ -8,4 +8,6 @@ WORKDIR /usr/src/app
 # Copy the application 
 COPY . /usr/src/app
 
+RUN pip install requests
+
 CMD ./Run.sh
