@@ -22,7 +22,7 @@ class TestDriver(unittest.TestCase):
 
     def test_create_stats_file(self):
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-        tools.create_stats_file(constants.FAKE_REQUEST())
+        tools.get_stats_path(constants.FAKE_REQUEST())
 
         testing_path = os.path.join(os.curdir, constants.DATABASE_PATH \
                      + constants.TEST_STATS_FILE)
@@ -35,7 +35,7 @@ class TestDriver(unittest.TestCase):
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
         
         # Fake a slow request
-        tools.create_stats_file(constants.FAKE_REQUEST())
+        tools.get_stats_path(constants.FAKE_REQUEST())
         slow_time = constants.SLOW_REQUEST_THRESHOLD + 1
         tools.update_statistics(constants.FAKE_REQUEST(), slow_time)
         testing_path = os.path.join(os.curdir, constants.DATABASE_PATH \
