@@ -10,6 +10,10 @@ PORT = 8888
 # Threshold for slow response time 
 SLOW_REQUEST_THRESHOLD = .5
 
+# Cache variables
+MAX_CACHE_ELEMENTS = 100
+CACHE_TIME_LIMIT = 60 # Seconds
+
 STATS_PATH = '/stats'
 TEST_PATH = '/test'
 TEST_CLEAN_UP_PATH = '/test_clean_up'
@@ -19,6 +23,8 @@ ROOT_PATH = "/"
 
 # Important URLs
 NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
+
+#TODO: adjust for testing
 PROXY_URL = 'http://localhost:' + str(PORT)
 TEST_URL = PROXY_URL + "/test"
 TEST_CLEAN_UP_URL = PROXY_URL + TEST_CLEAN_UP_PATH

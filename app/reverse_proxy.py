@@ -36,7 +36,8 @@ tools.create_database()
 
 print constants.SERVER_START_MESSAGE
 
-cache = ExpiringDict(max_len=100, max_age_seconds=5)
+cache = ExpiringDict(max_len = constants.MAX_CACHE_ELEMENTS, \
+                     max_age_seconds = constants.CACHE_TIME_LIMIT)
 
 # Start the reverse proxy server
 ProxyServer(("", constants.PORT), ProxyHandler).serve_forever()

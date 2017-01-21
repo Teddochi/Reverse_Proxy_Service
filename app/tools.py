@@ -6,17 +6,17 @@ import json
 from os import curdir, path, makedirs, remove
 
 # Database tools --------------------------------------------------------------
-# Create a database folder if it is not already there
+# Create a database folder
 def create_database():
     if not path.exists(constants.DATABASE_PATH):
         makedirs(constants.DATABASE_PATH)
 
-# Creates a statistics file if needed
+# Creates a statistics file
 def create_stats_file(request):
-    # Create a statistics file name from the client's IP address
+    # Create a file name from the client's IP address
     file_name = request.client_address[0].replace(".", "-") + ".json"
 
-    # Generate a path to the stats file
+    # Generate a path to the file
     stats_path = path.join(curdir, constants.DATABASE_PATH + file_name)
 
     # Check if file exists at the path, create it if not
@@ -95,6 +95,8 @@ def get_response(request, cache):
         info = {'data': response.read(), \
                 'code': response.code, \
                 'headers': response.info().items()}
+
+        # Store this info in the cache       
         cache[request.path] = info
         return info
 
@@ -117,7 +119,6 @@ def handle_proxy_request(request, start_time, cache):
     # Record the amount of time taken to complete the request
     end = time.time()
     request_time = end - start_time    
-    print request_time
 
     # Update statistics file according to request
     update_statistics(request, request_time)
