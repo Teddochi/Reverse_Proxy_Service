@@ -10,10 +10,6 @@ from app import constants
 from app import tools
 
 
-# Helper function to test that a command receives a status code of 200
-def receives_200(command):
-    r = requests.get(constants.TEST_URL + command)
-    return r.status_code == 200
 
 # This class runs tests for each general requirement.  
 # Each test is defined by several unit tests
@@ -26,7 +22,7 @@ class TestDriver(unittest.TestCase):
 
     def test_create_stats_file(self):
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-        tools.create_stats_file(constants.FAKE_REQUEST())
+        tools.get_stats_path(constants.FAKE_REQUEST())
 
         testing_path = os.path.join(os.curdir, constants.DATABASE_PATH \
                      + constants.TEST_STATS_FILE)
@@ -39,7 +35,7 @@ class TestDriver(unittest.TestCase):
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
         
         # Fake a slow request
-        tools.create_stats_file(constants.FAKE_REQUEST())
+        tools.get_stats_path(constants.FAKE_REQUEST())
         slow_time = constants.SLOW_REQUEST_THRESHOLD + 1
         tools.update_statistics(constants.FAKE_REQUEST(), slow_time)
         testing_path = os.path.join(os.curdir, constants.DATABASE_PATH \
@@ -57,7 +53,6 @@ class TestDriver(unittest.TestCase):
             self.assertTrue(slow == [str(slow_time) + constants.TIME_UNIT]) 
 
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-        
 # End tests for application tools ---------------------------------------------
 
 # Tests for challenge requirements --------------------------------------------
@@ -83,31 +78,32 @@ class TestDriver(unittest.TestCase):
 
     # Test routeList command
     def test_route_list(self):
-        self.assertTrue(receives_200('/routeList'))
+        self.assertTrue(receives_200('/routeList&a=sf-muni'))
 
     # Test routeConfig command
     def test_route_config(self):
-        self.assertTrue(receives_200('/routeConfig'))
+        self.assertTrue(receives_200('/routeConfig&a=sf-muni'))
 
     # Test predictions command
     def test_predictions(self):
-        self.assertTrue(receives_200('/predictions'))
+        self.assertTrue(receives_200('/predictions&a=sf-muni&stopId=15184'))
 
     # Test predictionsForMultiStops command
     def test_predictions_for_multi_stops(self):
-        self.assertTrue(receives_200('/predictionsForMultiStops'))
+        self.assertTrue(receives_200('/predictionsForMultiStops&a=sf-muni' \
+                                    +'&stops=E|5184&stops=F|5184'))
 
     # Test schedule command
     def test_schedule(self):
-        self.assertTrue(receives_200('/schedule'))
+        self.assertTrue(receives_200('/schedule&a=sf-muni&r=F'))
 
     # Test messages command
     def test_messages(self):
-        self.assertTrue(receives_200('/messages'))
+        self.assertTrue(receives_200('/messages&a=sf-muni'))
 
     # Test vehicleLocations command
     def test_vehicle_locations(self):
-        self.assertTrue(receives_200('/vehicleLocations'))
+        self.assertTrue(receives_200('/vehicleLocations&a=sf-muni&r=N&t=1144953500233'))
 
     # Test stats command
     def test_stats(self):
@@ -121,7 +117,6 @@ class TestDriver(unittest.TestCase):
         self.assertTrue('slow_requests' in stats_page)
         self.assertTrue('queries' in stats_page)
         tools.handle_test_clean_up(constants.FAKE_REQUEST())
-
 # End tests for challenge requirements ----------------------------------------
 
 """ Commented until later
@@ -138,6 +133,10 @@ class TestDriver(unittest.TestCase):
         bonus_3.test(self)
 """
 
-# Todo: show results from each test if possible
+# Helper function to test that a command receives a status code of 200
+def receives_200(command):
+    r = requests.get(constants.TEST_URL + command)
+    return r.status_code == 200
+
 if __name__ == '__main__':
     unittest.main()

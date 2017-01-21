@@ -6,9 +6,10 @@ import SocketServer
 import tools
 import constants
 import time
+from expiringdict import ExpiringDict
 
 class ProxyServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
-    pass
+    pass    
 
 class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(request):
@@ -28,12 +29,15 @@ class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             ProxyHandler.do_GET(test_request)
         else:
             # Standard reverse proxy request
-            tools.handle_proxy_request(request, start_time)
+            tools.handle_proxy_request(request, start_time, cache)
             
 # Set up the database folder
 tools.create_database()
 
 print constants.SERVER_START_MESSAGE
+
+cache = ExpiringDict(max_len = constants.MAX_CACHE_ELEMENTS, \
+                     max_age_seconds = constants.CACHE_TIME_LIMIT)
 
 # Start the reverse proxy server
 ProxyServer(("", constants.PORT), ProxyHandler).serve_forever()

@@ -9,5 +9,6 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 RUN pip install requests
+RUN pip install expiringdict
 
-CMD ./Run.sh
+CMD ["./Run.sh"]
