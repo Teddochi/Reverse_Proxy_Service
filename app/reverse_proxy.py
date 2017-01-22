@@ -25,13 +25,14 @@ class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             # Standard reverse proxy request
             tools.handle_proxy_request(request, start_time, cache, db)
             
-#TODO: Move info to constants
+# Connect to MySQL database
 db = mysql.connector.connect(**constants.MYSQL_CONNECT_INFO)
 
-print constants.SERVER_START_MESSAGE
-
+# Create the cache 
 cache = ExpiringDict(max_len = constants.MAX_CACHE_ELEMENTS, \
                      max_age_seconds = constants.CACHE_TIME_LIMIT)
+
+print constants.SERVER_START_MESSAGE
 
 # Start the reverse proxy server
 ProxyServer(("", constants.PORT), ProxyHandler).serve_forever()

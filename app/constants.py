@@ -5,7 +5,7 @@ General changes to the application can be made here.
 
 # Configurable constants ------------------------------------------------------
 
-# The port for the server.  Make sure Dockerfile uses this port
+# This is the server port.  Make sure Dockerfile exposes this port
 PORT = 8888
 
 # Caching variables
@@ -49,4 +49,5 @@ QUERIES_KEY = 'queries'
 SLOW_REQUESTS_KEY = 'slow_requests'
 MYSQL_GET_QUERIES = ('SELECT * FROM queries')
 MYSQL_GET_SLOW_REQUESTS = ('SELECT * FROM slow_requests')
-
+CLEAN_QUERIES_COMMAND = ('DELETE FROM queries')
+CLEAN_SLOW_REQUESTS_COMMAND = ('DELETE FROM slow_requests')

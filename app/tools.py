@@ -4,6 +4,7 @@ import time
 import mysql.connector
 import pprint
 import json
+import os
 
 """
 This is a set of tools used by the reverse proxy service.
@@ -29,9 +30,17 @@ def handle_stats_request(request, db):
     # Load statistics from database
     statistics = get_statistics(db)
 
-    # Write statistics to page
-    request.wfile.write(json.dumps(statistics))
+    # Write data to a file to get proper formatting
+    with open('data.txt', 'w') as out:
+        json.dump(statistics, out, sort_keys=True, indent=4, separators=(',', ': '))
+    
+    # Load the formatted data to the page
+    with open('data.txt') as out:
+        request.wfile.write(out.read())
 
+    # Delete the file
+    os.remove('data.txt')
+    
 # Get an http response either from the cache or from the nextbus API
 def get_nextbus_response(request, cache):
     if request.path in cache:
