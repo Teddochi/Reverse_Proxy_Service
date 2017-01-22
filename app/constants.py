@@ -3,49 +3,50 @@ These constants are used throughout the application.
 General changes to the application can be made here.
 """
 
-# The port for the server.  
-# Remember to adjust the Dockerfile to reflect any changes.
+# Configurable constants ------------------------------------------------------
+
+# The port for the server.  Make sure Dockerfile uses this port
 PORT = 8888
 
-# Threshold for slow response time 
-SLOW_REQUEST_THRESHOLD = .5
-
-# Cache variables
+# Caching variables
 MAX_CACHE_ELEMENTS = 100
 CACHE_TIME_LIMIT = 60 # Seconds
 
-STATS_PATH = '/stats'
-TEST_PATH = '/test'
-TEST_CLEAN_UP_PATH = '/test_clean_up'
-FAVICON_PATH = '/favicon.ico'
-DATABASE_PATH = 'app/database/'
-ROOT_PATH = "/"
+# Threshold for slow response time in seconds
+SLOW_REQUEST_THRESHOLD = 1
 
-# Important URLs
-NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
+# Time unit for slow request threshold.  Currently 's' for seconds
+TIME_UNIT = 's'
 
-#TODO: adjust for testing
+# URL of the server.  May need to change to docker machine IP
 PROXY_URL = 'http://localhost:' + str(PORT)
-TEST_URL = PROXY_URL + "/test"
-TEST_CLEAN_UP_URL = PROXY_URL + TEST_CLEAN_UP_PATH
 
-# Used with NextBus API.  
+# Message displayed when the server is startec
+SERVER_START_MESSAGE = 'Starting server on port: ' + str(PORT)
+
+
+# Reverse proxy constants -----------------------------------------------------
+
+# Nextbus API URL pieces
+NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
 COMMAND_PARAMETER = '?command='
+
+ROOT_PATH = '/'
+STATS_PATH = '/stats'
+FAVICON_PATH = '/favicon.ico'
+
+
+# Database constants ----------------------------------------------------------
+
+# Info used to connect to the MySQL database
+MYSQL_CONNECT_INFO = {'host': 'sql3.freemysqlhosting.net',    	# Host
+                     'user': 'sql3154978',         		   		# Username
+                     'passwd': 'MYK4Pjc8BT',  					# Password
+                     'db': 'sql3154978'}     					# DB name
 
 # Used for the statistics page
 QUERIES_KEY = 'queries'
 SLOW_REQUESTS_KEY = 'slow_requests'
-CLEAN_STATS_FILE = {SLOW_REQUESTS_KEY:{}, QUERIES_KEY:{}}
+MYSQL_GET_QUERIES = ('SELECT * FROM queries')
+MYSQL_GET_SLOW_REQUESTS = ('SELECT * FROM slow_requests')
 
-SERVER_START_MESSAGE = "Starting server on port: " + str(PORT)
-
-# Seconds, used for slow requests
-TIME_UNIT = 's'
-
-# Testing variables
-TEST_ADDRESS = 'tool.test.request.ip'
-TEST_STATS_FILE = 'tool-test-request-ip.json'
-
-class FAKE_REQUEST(object):
-    client_address = (TEST_ADDRESS, '00000')
-    path = '/fake_test_path'

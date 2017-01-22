@@ -1,8 +1,6 @@
 version: '2'
 services:
   web:
-    build: .
+    image: teddochi/coding_challenge:latest
     ports:
      - "8888:8888"
-    volumes:
-     - .:/usr/src/app

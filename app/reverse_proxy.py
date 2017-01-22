@@ -6,6 +6,7 @@ import SocketServer
 import tools
 import constants
 import time
+import mysql.connector
 from expiringdict import ExpiringDict
 
 class ProxyServer(BaseHTTPServer.HTTPServer, SocketServer.ThreadingMixIn):
@@ -19,20 +20,13 @@ class ProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         # Handle the GET request
         if request.path == constants.STATS_PATH:
             # Statistics request
-            tools.handle_stats_request(request)
-        elif request.path == constants.TEST_CLEAN_UP_PATH:
-            # Handle a test clean-up
-            tools.handle_ip_clean_up(request)
-        elif request.path.startswith(constants.TEST_PATH):
-            # Handles a test request
-            test_request = tools.handle_test_request(request)
-            ProxyHandler.do_GET(test_request)
+            tools.handle_stats_request(request, db)
         else:
             # Standard reverse proxy request
-            tools.handle_proxy_request(request, start_time, cache)
+            tools.handle_proxy_request(request, start_time, cache, db)
             
-# Set up the database folder
-tools.create_database()
+#TODO: Move info to constants
+db = mysql.connector.connect(**constants.MYSQL_CONNECT_INFO)
 
 print constants.SERVER_START_MESSAGE
 

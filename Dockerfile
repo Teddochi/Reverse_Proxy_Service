@@ -10,5 +10,6 @@ COPY . /usr/src/app
 
 RUN pip install requests
 RUN pip install expiringdict
+RUN pip install mysql-connector
 
 CMD ["./Run.sh"]
