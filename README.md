@@ -16,9 +16,22 @@ To start the reverse proxy server, use:
 This will use Docker to run the server at http://localhost:8888 on your machine.
 
 If you are running the server on a virtual machine, connect to the server at the IP of your docker machine.
+You can find this IP with the following command:
 ```
 docker-machine ip
 ```
+
+To stop the server, use:
+```
+./Stop.sh
+```
+
+This application was designed to have several configurable settings. 
+You can make changes to "app/constants.py" to adjust the following settings:
+- Server port (You will also need to adjust the Dockerfile and docker-compose.yml to reflect any changes here)
+- Maximum cached elements
+- Time limit for cached items
+- Threshold for defining slow response times
 
 ## Implementation details
 The application code can be found in the "app" directory.  
@@ -32,7 +45,8 @@ A testing suite can be found in the "testing" directory.
 - "context.py": imports constants from the application for testing
 
 Application scripts
-- "Run.sh": executes the application using Docker
+- "Run.sh": executes the application using Docker-Compose
+- "Stop.sh": stops the application
 - "Tests.sh": runs unit tests against the running application
 - "Clean_Database.sh": resets the database if desired.  You should restart the server if you do so.  
 - "Docker_Run.sh": This script is used in the Dockerfile to start the application
@@ -40,14 +54,6 @@ Application scripts
 Database
 - This application connects to a MySQL database hosted by https://www.freemysqlhosting.net/
 - Statistics information is stored in this database
-
-## Configurable settings
-This application was designed to have several configurable settings. 
-You can make changes to "app/constants.py" to adjust the following settings:
-- Server port (You will also need to adjust the Dockerfile, docker-compose.yml, and Run.sh to reflect any changes here)
-- Maximum cached elements
-- Time limit for cached items
-- Threshold for defining slow response times
 
 ## Testing
 This project includes a testing suite that you can run using:

@@ -10,10 +10,8 @@ from context import constants
 
 # URL of the server.  
 # If running on a virtual machine, use the docker-machine IP address instead.
-#PROXY_URL = 'http://localhost:' + str(constants.PORT)
 #PROXY_URL = <DOCKER_MACHINE_IP>: + str(constants.PORT)
-PROXY_URL = "http://192.168.99.100:" + str(constants.PORT)
-
+PROXY_URL = 'http://localhost:' + str(constants.PORT)
  
 # This driver contains all of the tests for the application
 class TestDriver(unittest.TestCase):
