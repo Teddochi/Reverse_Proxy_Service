@@ -5,25 +5,20 @@ import os
 import requests
 import json
 import mysql.connector
-from context import app
-from app import constants
-from app import tools
+from context import constants
 
 
+# URL of the server.  
+# If running on a virtual machine, use the docker-machine IP address instead.
+#PROXY_URL = 'http://localhost:' + str(constants.PORT)
+#PROXY_URL = <DOCKER_MACHINE_IP>: + str(constants.PORT)
+PROXY_URL = "http://192.168.99.100:" + str(constants.PORT)
 
-# This class runs tests for each general requirement.  
-# Each test is defined by several unit tests
+ 
+# This driver contains all of the tests for the application
 class TestDriver(unittest.TestCase):
 
-    # Test MySQL database connection
-    def test_database_connection(self):
-        try:
-            db = mysql.connector.connect(**constants.MYSQL_CONNECT_INFO)
-            db.close()
-            self.assertTrue(True)
-        except:
-            self.assertTrue(False)
-
+    # Tests for coding challenge file requirements ----------------------------
     # confirm that the Run.sh script is present
     def test_run_script_exists(self):
         self.assertTrue(os.path.isfile("Run.sh"))
@@ -35,6 +30,24 @@ class TestDriver(unittest.TestCase):
     # Confirm that the README file is present
     def test_readme_exists(self):
         self.assertTrue(os.path.isfile("README.md"))
+
+    # Confirm that the application uses Docker
+    def test_dockerfile_exists(self):
+        self.assertTrue(os.path.isfile("Dockerfile"))
+    
+    # Confirm that the application uses Docker-Compose
+    def test_dockerfile_exists(self):
+        self.assertTrue(os.path.isfile("docker-compose.yml"))
+        
+    # Tests for the reverse proxy server --------------------------------------
+    # Test MySQL database connection
+    def test_database_connection(self):
+        try:
+            db = mysql.connector.connect(**constants.MYSQL_CONNECT_INFO)
+            db.close()
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
 
     # Confirm that the reverse proxy is running
     def test_status(self):
@@ -75,7 +88,7 @@ class TestDriver(unittest.TestCase):
 
     # Test stats command
     def test_stats(self):
-        r = requests.get(constants.PROXY_URL + constants.STATS_PATH)
+        r = requests.get(PROXY_URL + constants.STATS_PATH)
 
         # Server provides a statistics page
         self.assertTrue(r.status_code == 200)
@@ -87,7 +100,7 @@ class TestDriver(unittest.TestCase):
 
 # Helper function to test that a command receives a status code of 200
 def receives_200(command):
-    r = requests.get(constants.PROXY_URL + command)
+    r = requests.get(PROXY_URL + command)
     return r.status_code == 200
 
 if __name__ == '__main__':
