@@ -8,7 +8,7 @@ General changes to the application can be made here.
 PORT = 8888
 
 # Threshold for slow response time 
-SLOW_REQUEST_THRESHOLD = .5
+SLOW_REQUEST_THRESHOLD = .1
 
 # Cache variables
 MAX_CACHE_ELEMENTS = 100
@@ -19,14 +19,14 @@ TEST_PATH = '/test'
 TEST_CLEAN_UP_PATH = '/test_clean_up'
 FAVICON_PATH = '/favicon.ico'
 DATABASE_PATH = 'app/database/'
-ROOT_PATH = "/"
+ROOT_PATH = '/'
 
 # Important URLs
 NEXTBUS_URL =  'http://webservices.nextbus.com/service/publicXMLFeed'
 
 #TODO: adjust for testing
 PROXY_URL = 'http://localhost:' + str(PORT)
-TEST_URL = PROXY_URL + "/test"
+TEST_URL = PROXY_URL + '/test'
 TEST_CLEAN_UP_URL = PROXY_URL + TEST_CLEAN_UP_PATH
 
 # Used with NextBus API.  
@@ -36,8 +36,15 @@ COMMAND_PARAMETER = '?command='
 QUERIES_KEY = 'queries'
 SLOW_REQUESTS_KEY = 'slow_requests'
 CLEAN_STATS_FILE = {SLOW_REQUESTS_KEY:{}, QUERIES_KEY:{}}
+MYSQL_GET_QUERIES = ('SELECT * FROM queries')
+MYSQL_GET_SLOW_REQUESTS = ('SELECT * FROM slow_requests')
+MYSQL_CONNECT_INFO = {'host': 'sql3.freemysqlhosting.net',    	# Host
+                     'user': 'sql3154978',         		   	# Username
+                     'passwd': 'MYK4Pjc8BT',  					# Password
+                     'db': 'sql3154978'}       				# DB name
 
-SERVER_START_MESSAGE = "Starting server on port: " + str(PORT)
+
+SERVER_START_MESSAGE = 'Starting server on port: ' + str(PORT)
 
 # Seconds, used for slow requests
 TIME_UNIT = 's'
