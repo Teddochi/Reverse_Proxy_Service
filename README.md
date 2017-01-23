@@ -25,6 +25,13 @@ To stop the server, use:
 ```
 ./Stop.sh
 ```
+Documentation on the NextBus Public XML Feed can be found here: http://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
+To use this reverse proxy, enter nextbus commands like so:
+- http://localhost:8888/agencyList
+- http://localhost:8888/routeList&a=sf-muni
+
+You can also access the statistics of the database through the stats endpoint.
+- http://localhost:8888/stats
 
 This application was designed to have several configurable settings. 
 You can make changes to "app/constants.py" to adjust the following settings:
