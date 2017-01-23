@@ -1,4 +1,3 @@
-
 import unittest
 import socket
 import os
@@ -7,12 +6,11 @@ import json
 import mysql.connector
 from context import constants
 
-
 # URL of the server.  
 # If running on a virtual machine, use the docker-machine IP address instead.
-#PROXY_URL = <DOCKER_MACHINE_IP>: + str(constants.PORT)
+# PROXY_URL = <DOCKER_MACHINE_IP>: + str(constants.PORT)
 PROXY_URL = 'http://localhost:' + str(constants.PORT)
- 
+
 # This driver contains all of the tests for the application
 class TestDriver(unittest.TestCase):
 
@@ -54,14 +52,17 @@ class TestDriver(unittest.TestCase):
     # Test agencyList command
     def test_agency_list(self):
         self.assertTrue(receives_200('/agencyList'))
+        self.assertTrue(correct_data('/agencyList'))
 
     # Test routeList command
     def test_route_list(self):
         self.assertTrue(receives_200('/routeList&a=sf-muni'))
+        self.assertTrue(correct_data('/routeList&a=sf-muni'))
 
     # Test routeConfig command
     def test_route_config(self):
         self.assertTrue(receives_200('/routeConfig&a=sf-muni'))
+        self.assertTrue(correct_data('/routeConfig&a=sf-muni'))
 
     # Test predictions command
     def test_predictions(self):
@@ -75,19 +76,21 @@ class TestDriver(unittest.TestCase):
     # Test schedule command
     def test_schedule(self):
         self.assertTrue(receives_200('/schedule&a=sf-muni&r=F'))
+        self.assertTrue(correct_data('/schedule&a=sf-muni&r=F'))
 
     # Test messages command
     def test_messages(self):
         self.assertTrue(receives_200('/messages&a=sf-muni'))
+        self.assertTrue(correct_data('/messages&a=sf-muni'))
 
     # Test vehicleLocations command
     def test_vehicle_locations(self):
-        self.assertTrue(receives_200('/vehicleLocations&a=sf-muni&r=N&t=1144953500233'))
+        self.assertTrue(receives_200('/vehicleLocations&a=sf-muni'\
+                                   + '&r=N&t=1144953500233'))
 
     # Test stats command
     def test_stats(self):
         r = requests.get(PROXY_URL + constants.STATS_PATH)
-
         # Server provides a statistics page
         self.assertTrue(r.status_code == 200)
 
@@ -100,6 +103,16 @@ class TestDriver(unittest.TestCase):
 def receives_200(command):
     r = requests.get(PROXY_URL + command)
     return r.status_code == 200
+
+# Helper function to test that the proxy returns the correct data
+# This cannot be used for all endpoints since the data is constantly changing
+def correct_data(command):
+    proxy_data = requests.get(PROXY_URL + command)
+    nextbus_data = requests.get(constants.NEXTBUS_URL 
+                              + constants.COMMAND_PARAMETER
+                              + command[1:])
+
+    return str(proxy_data.text) == str(nextbus_data.text)
 
 if __name__ == '__main__':
     unittest.main()
