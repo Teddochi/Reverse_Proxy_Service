@@ -26,6 +26,7 @@ To stop the server, use:
 ./Stop.sh
 ```
 Documentation on the NextBus Public XML Feed can be found here: http://www.nextbus.com/xmlFeedDocs/NextBusXMLFeed.pdf
+
 To use this reverse proxy, enter nextbus commands like so:
 - http://localhost:8888/agencyList
 - http://localhost:8888/routeList&a=sf-muni
