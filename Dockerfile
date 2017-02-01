@@ -12,4 +12,4 @@ RUN pip install requests
 RUN pip install expiringdict
 RUN pip install mysql-connector
 
-CMD ["./Run.sh"]
+CMD ["./Docker_Run.sh"]

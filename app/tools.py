@@ -30,7 +30,7 @@ def handle_stats_request(request, db):
     # Load statistics from database
     statistics = get_statistics(db)
 
-    # Write data to a file to get proper formatting
+    # Write data to a file to achieve desired formatting
     with open('data.txt', 'w') as out:
         json.dump(statistics, out, sort_keys=True, indent=4, separators=(',', ': '))
     
@@ -151,6 +151,7 @@ def update_statistics(request, request_time, db):
 
     cursor = db.cursor()
     
+    # Update the database
     update_queries(request, cursor)
     update_slow_requests(request, cursor, request_time)
 

@@ -1,2 +1,2 @@
 #!/bin/bash
-python app/reverse_proxy.py
+docker-compose up -d

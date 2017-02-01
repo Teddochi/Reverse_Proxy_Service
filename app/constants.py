@@ -18,9 +18,6 @@ SLOW_REQUEST_THRESHOLD = 1
 # Time unit for slow request threshold.  Currently 's' for seconds
 TIME_UNIT = 's'
 
-# URL of the server.  May need to change to docker machine IP
-PROXY_URL = 'http://localhost:' + str(PORT)
-
 # Message displayed when the server is startec
 SERVER_START_MESSAGE = 'Starting server on port: ' + str(PORT)
 
