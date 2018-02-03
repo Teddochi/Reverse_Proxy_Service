@@ -36,10 +36,10 @@ FAVICON_PATH = '/favicon.ico'
 # Database constants ----------------------------------------------------------
 
 # Info used to connect to the MySQL database
-MYSQL_CONNECT_INFO = {'host': 'sql3.freemysqlhosting.net',    	# Host
-                     'user': 'sql3154978',         		   		# Username
-                     'passwd': 'MYK4Pjc8BT',  					# Password
-                     'db': 'sql3154978'}     					# DB name
+MYSQL_CONNECT_INFO = {'host': 'sql3.freemysqlhosting.net',    # Host
+                     'user': 'sql3154978',                    # Username
+                     'passwd': 'MYK4Pjc8BT',                  # Password
+                     'db': 'sql3154978'}                      # DB name
 
 # Used for the statistics page
 QUERIES_KEY = 'queries'
