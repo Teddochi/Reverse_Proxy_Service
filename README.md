@@ -1,6 +1,5 @@
 # Reverse_Proxy_Service
 This is the repository for my reverse-proxy service for the NextBus public transportation feed.  
-This service was created for a coding challenge assigned by the ThousandEyes recruitment team.
 
 ## Assumptions
 Due to the way that Docker runs on different machines, this repository is set up under the assumption that you are using a Linux machine.  There are guidelines below to adjust the application for other types of machines in case your container is running on a virtual machine. The main difference is that the server will be hosted on your docker-machine ip instead of localhost.  
